@@ -17,6 +17,13 @@ wget -qO- https://github.com/Nafancheg/msfs-ipset/archive/main.tar.gz | \
     echo "Ошибка при загрузке или распаковке архива!"; exit 1;
 }
 
+echo "Скачиваем и распаковываем файлы..."
+mkdir -p /tmp/msfs-install
+wget -qO /tmp/msfs.tar.gz https://github.com/Nafancheg/msfs-ipset/archive/main.tar.gz
+tar -xzf /tmp/msfs.tar.gz -C /tmp/msfs-install
+mv /tmp/msfs-install/msfs-ipset-main/* /tmp/msfs-install/
+rm -rf /tmp/msfs-install/msfs-ipset-main
+
 echo "Копируем файлы..."
 cp -f /tmp/msfs-install/etc/msfs_domains.list /etc/
 cp -f /tmp/msfs-install/usr/bin/update_msfs_ipset.sh /usr/bin/
