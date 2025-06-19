@@ -45,5 +45,13 @@ fi
 
 rm -rf /tmp/msfs-install
 
+# Настройка cron задач
+echo "Настраиваем cron-задачи..."
+
+# Получить текущий crontab, добавить задачи, если их нет
+(crontab -l 2>/dev/null | grep -v -F "/usr/bin/update_msfs_ipset.sh" ; echo "0 */2 * * * /usr/bin/update_msfs_ipset.sh") | crontab -
+(crontab -l 2>/dev/null | grep -v -F "echo '' > /tmp/ipset_debug.log" ; echo "0 3 * * * echo '' > /tmp/ipset_debug.log") | crontab -
+
+
 echo "✅ Установка завершена!"
 echo "Откройте LuCI: Сервисы → MSFS Routing"
