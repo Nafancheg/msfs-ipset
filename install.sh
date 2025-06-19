@@ -1,23 +1,49 @@
 #!/bin/sh
 
-# Установка зависимостей
-opkg update
-opkg install ipset iptables-mod-ipset
+set -e
 
-# Копирование файлов
-cp -r etc/* /etc/
-cp -r usr/* /usr/
+echo "Проверка необходимых инструментов..."
+command -v wget >/dev/null || { echo "Ошибка: wget не установлен!"; exit 1; }
+ping -c1 github.com >/dev/null || { echo "Ошибка: нет подключения к интернету!"; exit 1; }
 
-# Права доступа
+echo "Устанавливаем зависимости..."
+opkg update >/dev/null
+opkg install -y ipset iptables-mod-ipset >/dev/null
+
+echo "Скачиваем файлы конфигурации..."
+mkdir -p /tmp/msfs-install
+wget -qO- https://github.com/Nafancheg/msfs-ipset/archive/main.tar.gz | \
+  tar -xz -C /tmp/msfs-install --strip-components=1 || {
+    echo "Ошибка при загрузке или распаковке архива!"; exit 1;
+}
+
+echo "Копируем файлы..."
+cp -f /tmp/msfs-install/etc/msfs_domains.list /etc/
+cp -f /tmp/msfs-install/usr/bin/update_msfs_ipset.sh /usr/bin/
+cp -f /tmp/msfs-install/etc/init.d/msfs-ipset /etc/init.d/
+
+if [ -f /tmp/msfs-install/usr/lib/lua/luci/controller/msfs.lua ]; then
+    echo "Устанавливаем LUCI интерфейс..."
+    mkdir -p /usr/lib/lua/luci/controller
+    mkdir -p /usr/lib/lua/luci/model/cbi
+    cp -r /tmp/msfs-install/usr/lib/lua/luci/* /usr/lib/lua/luci/
+fi
+
+echo "Настраиваем права..."
 chmod +x /usr/bin/update_msfs_ipset.sh
 chmod +x /etc/init.d/msfs-ipset
 
-# Включение сервиса
+echo "Запускаем сервис..."
 /etc/init.d/msfs-ipset enable
 /etc/init.d/msfs-ipset start
 
-# Перезагрузка LUCI
-rm -rf /tmp/luci-modulecache
-/etc/init.d/uhttpd restart
+if [ -f /usr/lib/lua/luci/controller/msfs.lua ]; then
+    echo "Перезагружаем LUCI..."
+    rm -rf /tmp/luci-modulecache
+    /etc/init.d/uhttpd restart >/dev/null
+fi
 
-echo "Установка завершена. Интерфейс: Сервисы -> MSFS Routing"
+rm -rf /tmp/msfs-install
+
+echo "✅ Установка завершена!"
+echo "Откройте LuCI: Сервисы → MSFS Routing"
