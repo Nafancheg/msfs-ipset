@@ -18,35 +18,6 @@ ipset list vpn_domains | head -n 5
 cat /tmp/ipset_debug.log
 ```
 
-### Ручная установка
-Установите зависимости:
-
-```bash
-opkg update
-opkg install ipset iptables-mod-ipset
-```
-
-Склонируйте репозиторий:
-```bash
-git clone https://github.com/Nafancheg/msfs-ipset.git /tmp/msfs-ipset
-cd /tmp/msfs-ipset
-```
-
-Скопируйте файлы:
-```bash
-cp etc/msfs_domains.list /etc/
-cp usr/bin/update_msfs_ipset.sh /usr/bin/
-cp etc/init.d/msfs-ipset /etc/init.d/
-chmod +x /usr/bin/update_msfs_ipset.sh
-chmod +x /etc/init.d/msfs-ipset
-```
-
-Запустите сервис:
-```bash
-/etc/init.d/msfs-ipset enable
-/etc/init.d/msfs-ipset start
-```
-
 ### Ручное управление
 
 Обновить IP-адреса:
