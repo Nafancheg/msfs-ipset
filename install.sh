@@ -10,13 +10,6 @@ echo "Устанавливаем зависимости..."
 opkg update >/dev/null
 opkg install ipset kmod-ipt-ipset >/dev/null
 
-echo "Скачиваем файлы конфигурации..."
-mkdir -p /tmp/msfs-install
-wget -qO- https://github.com/Nafancheg/msfs-ipset/archive/main.tar.gz | \
-  tar -xz -C /tmp/msfs-install --strip-components=1 || {
-    echo "Ошибка при загрузке или распаковке архива!"; exit 1;
-}
-
 echo "Скачиваем и распаковываем файлы..."
 mkdir -p /tmp/msfs-install
 wget -qO /tmp/msfs.tar.gz https://github.com/Nafancheg/msfs-ipset/archive/main.tar.gz
