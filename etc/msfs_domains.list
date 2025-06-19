@@ -1,0 +1,43 @@
+# Основные домены
+flightsimulator.com
+worldflightsimulator.com
+fs.microsoft.com
+microsoftflightsimulator.com
+msflightsimulator.com
+flightsimulator.microsoft.com
+
+# Azure CDN и ассеты
+assets1.flightsimulator.com
+assets2.flightsimulator.com
+assets3.flightsimulator.com
+msassets1.flightsimulator.akamaized.net
+msassets2.flightsimulator.akamaized.net
+simassets1.flightsimulator.akamaized.net
+assets.flightsimulator.azureedge.net
+msfs-assets.azureedge.net
+msfs-assets.azurefd.net
+
+# Сервисы Azure
+flight-simulator-cdn.azureedge.net
+flight-simulator-data.azureedge.net
+msfs-cdn.azurefd.net
+msfs-data.azurefd.net
+msfs-cdn.azureedge.net
+msfs-live.azureedge.net
+msfs-api.azureedge.net
+
+# Картография Bing
+virtualearth.net
+platform.bing.com
+mapsplatform.bing.com
+tiles.virtualearth.net
+dev.virtualearth.net
+imagery.bing.com
+
+# API и сервисы
+msfs-api.azurewebsites.net
+msfs-marketplace.azureedge.net
+msfs-usercontent.azureedge.net
+msfs-userdata.azureedge.net
+msfs-weatherdata.azureedge.net
+marketplace.flightsimulator.com
