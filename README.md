@@ -15,7 +15,47 @@ wget -qO- https://raw.githubusercontent.com/Nafancheg/msfs-ipset/main/install.sh
 
 ```bash
 ipset list vpn_domains | head -n 5
+```
+
+Пример вывода
+```bash
+root@OpenWrt: ipset list vpn_domains | head -n 5
+Name: vpn_domains
+Type: hash:ip
+Revision: 6
+Header: family inet hashsize 1024 maxelem 1024 bucketsize 12 initval 0x9c301da8
+Size in memory: 696
+```
+И лог файл:
+
+```bash
 cat /tmp/ipset_debug.log
+```
+Пример вывода
+```bash
+🔍 mapsplatform.bing.com
+ipset v7.21: Element cannot be added to the set: it's already added
+ℹ️ 150.171.27.10 (дубликат)
+ipset v7.21: Element cannot be added to the set: it's already added
+ℹ️ 150.171.28.10 (дубликат)
+🔍 tiles.virtualearth.net
+✅ 74.178.114.10
+🔍 dev.virtualearth.net
+ipset v7.21: Element cannot be added to the set: it's already added
+ℹ️ 13.107.246.45 (дубликат)
+🔍 imagery.bing.com
+ipset v7.21: Element cannot be added to the set: it's already added
+ℹ️ 150.171.27.10 (дубликат)
+ipset v7.21: Element cannot be added to the set: it's already added
+ℹ️ 150.171.28.10 (дубликат)
+🔍 msfs-api.azurewebsites.net
+🔍 msfs-marketplace.azureedge.net
+🔍 msfs-usercontent.azureedge.net
+🔍 msfs-userdata.azureedge.net
+🔍 msfs-weatherdata.azureedge.net
+🔍 marketplace.flightsimulator.com
+=== Итог ===
+Number of entries: 12
 ```
 
 ### Ручное управление
