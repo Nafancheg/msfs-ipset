@@ -1,7 +1,7 @@
 
 # MSFS IPSet для OpenWRT
 
-Утилита для управления маршрутизацией трафика Microsoft Flight Simulator через VPN
+Утилита для управления маршрутизацией трафика Microsoft Flight Simulator через VPN c обходом блокировок от itdoginfo - domain-routing-openwrt
 
 ## Установка
 
