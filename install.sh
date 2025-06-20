@@ -8,7 +8,7 @@ ping -c1 github.com >/dev/null || { echo "Ошибка: нет подключе�
 
 echo "Устанавливаем зависимости..."
 opkg update >/dev/null
-opkg install ipset kmod-ipt-ipset bind-dig iptables-mod-ipopt >/dev/null || {
+opkg install ipset kmod-ipt-ipset bind-dig iptables-mod-ipopt iptables-zz-legacy >/dev/null || {
     echo "⚠️ Некоторые пакеты не установились, продолжаем..."
 }
 
