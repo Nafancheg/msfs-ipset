@@ -8,7 +8,7 @@ ping -c1 github.com >/dev/null || { echo "Ошибка: нет подключе�
 
 echo "Устанавливаем зависимости..."
 opkg update >/dev/null
-opkg install ipset kmod-ipt-ipset bind-dig>/dev/null
+opkg install ipset kmod-ipt-ipset bind-dig iptables-nft >/dev/null
 
 echo "Скачиваем и распаковываем файлы..."
 mkdir -p /tmp/msfs-install
