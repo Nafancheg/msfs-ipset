@@ -8,34 +8,40 @@ ping -c1 github.com >/dev/null || { echo "Ошибка: нет подключе�
 
 echo "Устанавливаем зависимости..."
 opkg update >/dev/null
-opkg install ipset kmod-ipt-ipset bind-dig iptables-mod-ipopt >/dev/null
+opkg install ipset kmod-ipt-ipset bind-dig iptables-mod-ipopt >/dev/null || {
+    echo "⚠️ Некоторые пакеты не установились, продолжаем..."
+}
 
 echo "Скачиваем и распаковываем файлы..."
 mkdir -p /tmp/msfs-install
 wget -qO /tmp/msfs.tar.gz https://github.com/Nafancheg/msfs-ipset/archive/main.tar.gz
 tar -xzf /tmp/msfs.tar.gz -C /tmp/msfs-install
-mv /tmp/msfs-install/msfs-ipset-main/* /tmp/msfs-install/
-rm -rf /tmp/msfs-install/msfs-ipset-main
+mv /tmp/msfs-install/msfs-ipset-main/* /tmp/msfs-install/ 2>/dev/null || {
+    echo "⚠️ Нестандартная структура архива, пробуем другой метод..."
+    mv /tmp/msfs-install/*/usr /tmp/msfs-install/ 2>/dev/null
+}
 
 echo "Копируем файлы..."
-cp -f /tmp/msfs-install/etc/msfs_domains.list /etc/
-cp -f /tmp/msfs-install/usr/bin/update_msfs_ipset.sh /usr/bin/
-cp -f /tmp/msfs-install/etc/init.d/msfs-ipset /etc/init.d/
+[ -f /tmp/msfs-install/etc/msfs_domains.list ] && cp -f /tmp/msfs-install/etc/msfs_domains.list /etc/
+[ -f /tmp/msfs-install/usr/bin/update_msfs_ipset.sh ] && cp -f /tmp/msfs-install/usr/bin/update_msfs_ipset.sh /usr/bin/
+[ -f /tmp/msfs-install/etc/init.d/msfs-ipset ] && cp -f /tmp/msfs-install/etc/init.d/msfs-ipset /etc/init.d/
 
 if [ -f /tmp/msfs-install/usr/lib/lua/luci/controller/msfs.lua ]; then
     echo "Устанавливаем LUCI интерфейс..."
-    mkdir -p /usr/lib/lua/luci/controller
-    mkdir -p /usr/lib/lua/luci/model/cbi
-    cp -r /tmp/msfs-install/usr/lib/lua/luci/* /usr/lib/lua/luci/
+    mkdir -p /usr/lib/lua/luci/{controller,model/cbi}
+    cp -f /tmp/msfs-install/usr/lib/lua/luci/controller/msfs.lua /usr/lib/lua/luci/controller/
+    cp -f /tmp/msfs-install/usr/lib/lua/luci/model/cbi/msfs.lua /usr/lib/lua/luci/model/cbi/
 fi
 
 echo "Настраиваем права..."
-chmod +x /usr/bin/update_msfs_ipset.sh
-chmod +x /etc/init.d/msfs-ipset
+chmod +x /usr/bin/update_msfs_ipset.sh 2>/dev/null
+chmod +x /etc/init.d/msfs-ipset 2>/dev/null
 
 echo "Запускаем сервис..."
-/etc/init.d/msfs-ipset enable
-/etc/init.d/msfs-ipset start
+[ -x /etc/init.d/msfs-ipset ] && {
+    /etc/init.d/msfs-ipset enable
+    /etc/init.d/msfs-ipset start
+}
 
 if [ -f /usr/lib/lua/luci/controller/msfs.lua ]; then
     echo "Перезагружаем LUCI..."
@@ -43,15 +49,9 @@ if [ -f /usr/lib/lua/luci/controller/msfs.lua ]; then
     /etc/init.d/uhttpd restart >/dev/null
 fi
 
-rm -rf /tmp/msfs-install
-
-# Настройка cron задач
 echo "Настраиваем cron-задачи..."
-
-# Получить текущий crontab, добавить задачи, если их нет
-(crontab -l 2>/dev/null | grep -v -F "/usr/bin/update_msfs_ipset.sh" ; echo "0 */2 * * * /usr/bin/update_msfs_ipset.sh") | crontab -
-(crontab -l 2>/dev/null | grep -v -F "echo '' > /tmp/ipset_debug.log" ; echo "0 3 * * * echo '' > /tmp/ipset_debug.log") | crontab -
-
+(crontab -l 2>/dev/null | grep -v "/usr/bin/update_msfs_ipset.sh"; echo "0 */2 * * * /usr/bin/update_msfs_ipset.sh") | crontab -
+(crontab -l 2>/dev/null | grep -v "echo '' > /tmp/ipset_debug.log"; echo "0 3 * * * echo '' > /tmp/ipset_debug.log") | crontab -
 
 echo "✅ Установка завершена!"
 echo "Откройте LuCI: Сервисы → MSFS Routing"
