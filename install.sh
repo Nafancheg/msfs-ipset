@@ -16,10 +16,8 @@ echo "Скачиваем и распаковываем файлы..."
 mkdir -p /tmp/msfs-install
 wget -qO /tmp/msfs.tar.gz https://github.com/Nafancheg/msfs-ipset/archive/main.tar.gz
 tar -xzf /tmp/msfs.tar.gz -C /tmp/msfs-install
-mv /tmp/msfs-install/msfs-ipset-main/* /tmp/msfs-install/ 2>/dev/null || {
-    echo "⚠️ Нестандартная структура архива, пробуем другой метод..."
-    mv /tmp/msfs-install/*/usr /tmp/msfs-install/ 2>/dev/null
-}
+mv /tmp/msfs-install/msfs-ipset-main/* /tmp/msfs-install/
+rm -rf /tmp/msfs-install/msfs-ipset-main
 
 echo "Копируем файлы..."
 [ -f /tmp/msfs-install/etc/msfs_domains.list ] && cp -f /tmp/msfs-install/etc/msfs_domains.list /etc/
