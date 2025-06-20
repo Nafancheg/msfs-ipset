@@ -6,6 +6,10 @@ echo "Проверка необходимых инструментов..."
 command -v wget >/dev/null || { echo "Ошибка: wget не установлен!"; exit 1; }
 ping -c1 github.com >/dev/null || { echo "Ошибка: нет подключения к интернету!"; exit 1; }
 
+# Принудительная очистка предыдущей установки
+echo "Очистка временных файлов предыдущей установки..."
+rm -rf /tmp/msfs-install /tmp/msfs.tar.gz
+
 echo "Устанавливаем зависимости..."
 opkg update >/dev/null
 opkg install ipset kmod-ipt-ipset bind-dig iptables-mod-ipopt iptables-zz-legacy luci luci-base luci-mod-admin-full luci-compat luci-theme-bootstrap >/dev/null || {
