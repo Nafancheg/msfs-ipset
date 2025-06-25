@@ -30,7 +30,8 @@ echo "Копируем файлы..."
 
 if [ -f /tmp/msfs-install/usr/lib/lua/luci/controller/msfs.lua ]; then
     echo "Устанавливаем LUCI интерфейс..."
-    mkdir -p /usr/lib/lua/luci/{controller,model/cbi}
+    mkdir -p /usr/lib/lua/luci/controller/
+    mkdir -p /usr/lib/lua/luci/model/cbi/
     cp -f /tmp/msfs-install/usr/lib/lua/luci/controller/msfs.lua /usr/lib/lua/luci/controller/
     cp -f /tmp/msfs-install/usr/lib/lua/luci/model/cbi/msfs.lua /usr/lib/lua/luci/model/cbi/
 fi
