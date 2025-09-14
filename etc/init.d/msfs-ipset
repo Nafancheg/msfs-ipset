@@ -1,13 +1,25 @@
 #!/bin/sh /etc/rc.common
 
-START=99
-STOP=10
+# OpenWrt init script priority levels
+# shellcheck disable=SC2034  # Variables used by OpenWrt init system
+START=99  # Start late in boot process
+STOP=10   # Stop early in shutdown process
 
 start() {
-    /usr/bin/update_msfs_ipset.sh
-    iptables -t mangle -A PREROUTING -m set --match-set vpn_domains dst -j MARK --set-mark 0x1
+    echo "Starting MSFS IPSet service..."
+    if [ -x /usr/bin/update_msfs_ipset.sh ]; then
+        /usr/bin/update_msfs_ipset.sh
+        # Add iptables rule only if ipset exists and is not empty
+        if ipset list vpn_domains >/dev/null 2>&1; then
+            iptables -t mangle -A PREROUTING -m set --match-set vpn_domains dst -j MARK --set-mark 0x1 2>/dev/null || echo "Warning: Failed to add iptables rule"
+        fi
+    else
+        echo "Error: /usr/bin/update_msfs_ipset.sh not found or not executable"
+        return 1
+    fi
 }
 
 stop() {
-    iptables -t mangle -D PREROUTING -m set --match-set vpn_domains dst -j MARK --set-mark 0x1 2>/dev/null
+    echo "Stopping MSFS IPSet service..."
+    iptables -t mangle -D PREROUTING -m set --match-set vpn_domains dst -j MARK --set-mark 0x1 2>/dev/null || echo "Warning: Failed to remove iptables rule (may not exist)"
 }
